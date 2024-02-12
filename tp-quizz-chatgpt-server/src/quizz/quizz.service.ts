@@ -5,34 +5,78 @@ import { OpenAIService } from 'nestjs-openai';
 export class QuizzService {
   constructor(private readonly openai: OpenAIService) {}
 
+  generateQuizzPrompt(
+    themes: string[],
+    difficulty: string,
+    useMultipleThemes: boolean,
+    numberOfQuestions: number,
+  ): string {
+    const themeOptions = themes.map((theme) => `"${theme}"`).join(', ');
+
+    const prompt = `
+      Création d'un quizz sur un thème${useMultipleThemes ? 's' : ''}
+
+      Instructions : Créez un quizz avec ${useMultipleThemes ? 'un ou plusieurs' : 'un seul'} thème${useMultipleThemes ? 's' : ''} parmi les options suivantes : ${themeOptions}. Vous devez spécifier ${useMultipleThemes ? 'les thèmes' : 'le thème'} du quizz et de difficulté ${difficulty} et le nombre de questions (${numberOfQuestions}), puis écrire 10 questions, chacune avec 4 réponses possibles et la bonne réponse, ainsi qu'une explication lié à la bonne réponse à la question pour chaque question en mentionnant la bonne réponse. Respectez le format JSON suivant et en renvoyant uniquement le JSON généré:
+
+      {
+        "questions": [
+          {
+            "question": "Votre_question",
+            "explication": "Explication de la réponse à votre question.",
+            "reponses": ["Réponse_1", "Réponse_2", "Réponse_3", "Réponse_4"],
+            "bonne_reponse": "Bonne_réponse",
+            "sujet": "Thème"
+          },
+          ...
+        ]
+      }
+
+      Exemple :
+
+      {
+        "questions": [
+          {
+            "question": "Quel est le sport le plus populaire au Brésil ?",
+            "explication": "Le football est le sport le plus populaire au Brésil, souvent considéré comme une véritable passion nationale.",
+            "reponses": ["Football", "Basketball", "Tennis", "Golf"],
+            "bonne_reponse": "Football",
+            "sujet": "sport"
+          },
+          {
+            "question": "Qui a remporté le Super Bowl 2020 ?",
+            "explication": "Les Kansas City Chiefs ont remporté le Super Bowl 2020 en battant les San Francisco 49ers lors de la 54e édition du Super Bowl.",
+            "reponses": ["Kansas City Chiefs", "San Francisco 49ers", "New England Patriots", "Los Angeles Rams"],
+            "bonne_reponse": "Kansas City Chiefs",
+            "sujet": "sport"
+          },
+          ...
+        ]
+      }
+      `;
+
+    return prompt;
+  }
+
   async generateQuizz(
     topics: string[],
     difficulty: string,
     isMultiple: boolean,
+    numberOfQuestions: number,
   ): Promise<string> {
     try {
+      const prompt = this.generateQuizzPrompt(
+        topics,
+        difficulty,
+        isMultiple,
+        numberOfQuestions,
+      );
+
       const { data } = await this.openai.createChatCompletion({
         model: 'gpt-3.5-turbo',
         messages: [
           {
             role: 'assistant',
-            content: `Liste de sujet : ${topics}.
-            Niveau de difficulté : ${difficulty}.
-            Option de sujet multiple : ${isMultiple ? 'oui' : 'non'}.
-            
-            Tu dois préparer un quizz de 10 questions en respectant obligatoirement le format json suivant : 
-            {
-            "questions": [
-                {
-                  "question": "Quel film a remporté l'Oscar du meilleur film en 1994 ?",
-                  "reponses": ["Forrest Gump", "Pulp Fiction", "La Liste de Schindler", "Le Roi Lion"],
-                  "bonne_reponse": "Forrest Gump",
-                  "sujet": "cinéma"
-                },
-             ]
-            }
-            
-            Consigne pour générer ce quizz, utilise le niveau de difficulté mentionné au début.  Chaque question comporte 4 réponses possibles et une seule réponse est correcte. Si l'option de sujet multiple est à "oui", alors tu peux choisir des questions sur tout les sujets mentionné au début. Sinon, si c'est à "non", tu dois choisir un seul sujet parmi la liste mentionné au début pour toute les questions du quizz.`,
+            content: prompt,
           },
         ],
         stream: false,
@@ -41,6 +85,7 @@ export class QuizzService {
       return data.choices[0].message.content;
     } catch (error) {
       console.error(error.response);
+      return 'Une erreur est survenue lors de la génération du quizz.';
     }
   }
 }

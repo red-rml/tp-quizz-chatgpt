@@ -24,10 +24,20 @@
 body {
   color: rgb(var(--foreground-rgb));
   background: #1a1a1a;
+  height: 100vh;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.filter-dropdown-select {
+  margin-top: 16px !important;
+}
+
+.filter-dropdown-select,
+.dropdown-options {
+  color: black;
 }

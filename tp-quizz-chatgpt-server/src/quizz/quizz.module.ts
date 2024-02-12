@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { QuizzService as QuizzService } from './quizz.service';
 import { OpenAIModule } from 'nestjs-openai';
 import { QuizzGateway } from './quizz.gateway';
+import { QuizzService } from './quizz.service';
 
 @Module({
   imports: [
     OpenAIModule.register({
       apiKey:
         process.env.OPENAI_API_KEY ??
-        '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',
+        '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',
     }),
   ],
   providers: [QuizzGateway, QuizzService],

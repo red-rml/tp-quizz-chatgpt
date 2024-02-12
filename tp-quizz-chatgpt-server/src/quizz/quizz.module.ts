@@ -6,9 +6,7 @@ import { QuizzService } from './quizz.service';
 @Module({
   imports: [
     OpenAIModule.register({
-      apiKey:
-        process.env.OPENAI_API_KEY ??
-        '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',
+      apiKey: process.env.OPENAI_API_KEY ?? 'API KEY',
     }),
   ],
   providers: [QuizzGateway, QuizzService],

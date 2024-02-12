@@ -34,7 +34,9 @@ export default function App() {
   }, []);
 
   if (isQuizzLoading && !questions)
-    return <Container>Quiz en cours de création, veillez patienter.</Container>;
+    return (
+      <Container>Quiz en cours de création, veillez patienter ...</Container>
+    );
   let quiz;
 
   if (questions)

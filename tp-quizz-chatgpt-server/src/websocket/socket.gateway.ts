@@ -7,16 +7,32 @@ import {
 } from '@nestjs/websockets';
 
 import { Socket } from 'socket.io';
-import { QuizzService } from './quizz.service';
+import { QuizzService } from '../quizz/quizz.service';
 
 @WebSocketGateway({
   cors: true,
 })
-export class QuizzGateway {
+export class SocketGateway {
   @WebSocketServer()
   server: Socket;
 
   constructor(private quizzService: QuizzService) {}
+
+  @SubscribeMessage('create-room')
+  async createRoom(
+    @MessageBody()
+    data: {
+      hostUserId: string | number;
+    },
+    @ConnectedSocket() client: Socket,
+  ) {
+    try {
+      client.emit('room-created', { ...data });
+      client.broadcast.emit('room-created', { ...data });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   @SubscribeMessage('generate-quizz')
   async generateQuizz(
@@ -37,8 +53,8 @@ export class QuizzGateway {
     );
 
     console.log(res);
-    client.emit('quizz', res);
-    client.broadcast.emit('quizz', res);
+    client.emit('quiz-generated', JSON.parse(res));
+    client.broadcast.emit('quiz-generated', JSON.parse(res));
   }
 
   @SubscribeMessage('quiz-loading')

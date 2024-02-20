@@ -1,14 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { configuration } from '../config/configuration';
-import { QuizzModule } from './quizz/quizz.module';
+import { SocketModule } from './websocket/socket.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
-    QuizzModule,
-  ],
+  imports: [SocketModule],
   controllers: [],
-  providers: [ConfigService],
+  providers: [],
 })
 export class AppModule {}

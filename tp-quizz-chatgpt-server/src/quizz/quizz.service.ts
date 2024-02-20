@@ -16,42 +16,42 @@ export class QuizzService {
     const prompt = `
       Création d'un quizz sur un thème${useMultipleThemes ? 's' : ''}
 
-      Instructions : Créez un quizz avec ${useMultipleThemes ? 'un ou plusieurs' : 'un seul'} thème${useMultipleThemes ? 's' : ''} parmi les options suivantes : ${themeOptions}. Vous devez spécifier ${useMultipleThemes ? 'les thèmes' : 'le thème'} du quizz et de difficulté ${difficulty} et le nombre de questions (${numberOfQuestions}), puis écrire 10 questions, chacune avec 4 réponses possibles et la bonne réponse, ainsi qu'une explication lié à la bonne réponse à la question pour chaque question en mentionnant la bonne réponse. Respectez le format JSON suivant et en renvoyant uniquement le JSON généré:
-
-      {
-        "questions": [
-          {
-            "question": "Votre_question",
-            "explication": "Explication de la réponse à votre question.",
-            "reponses": ["Réponse_1", "Réponse_2", "Réponse_3", "Réponse_4"],
-            "bonne_reponse": "Bonne_réponse",
-            "sujet": "Thème"
-          },
-          ...
-        ]
-      }
+      Instructions : Créez un quizz avec ${useMultipleThemes ? 'un ou plusieurs' : 'un seul'} thème${useMultipleThemes ? 's' : ''} parmi les options suivantes : ${themeOptions}. Vous devez spécifier ${useMultipleThemes ? 'les thèmes' : 'le thème'} du quizz et de difficulté ${difficulty} et le nombre de questions (${numberOfQuestions}), puis écrire 10 questions, chacune avec 4 réponses possibles, la bonne réponse et un indice pour chaque question, ainsi qu'une explication lié à la bonne réponse à la question pour chaque question en mentionnant la bonne réponse. Respectez le format JSON suivant et en renvoyant uniquement le JSON généré:
+      
+      [
+        {
+          "question": "Votre_question",
+          "explication": "Explication de la réponse à votre question.",
+          "reponses": ["Réponse_1", "Réponse_2", "Réponse_3", "Réponse_4"],
+          "bonne_reponse": "Bonne_réponse",
+          "sujet": "Thème",
+          "indice": "Indice"
+        },
+        ...
+      ]
+      
 
       Exemple :
 
-      {
-        "questions": [
-          {
-            "question": "Quel est le sport le plus populaire au Brésil ?",
-            "explication": "Le football est le sport le plus populaire au Brésil, souvent considéré comme une véritable passion nationale.",
-            "reponses": ["Football", "Basketball", "Tennis", "Golf"],
-            "bonne_reponse": "Football",
-            "sujet": "sport"
-          },
-          {
-            "question": "Qui a remporté le Super Bowl 2020 ?",
-            "explication": "Les Kansas City Chiefs ont remporté le Super Bowl 2020 en battant les San Francisco 49ers lors de la 54e édition du Super Bowl.",
-            "reponses": ["Kansas City Chiefs", "San Francisco 49ers", "New England Patriots", "Los Angeles Rams"],
-            "bonne_reponse": "Kansas City Chiefs",
-            "sujet": "sport"
-          },
-          ...
-        ]
-      }
+      
+      [
+        {
+          "question": "Quel est le sport le plus populaire au Brésil ?",
+          "explication": "Le football est le sport le plus populaire au Brésil, souvent considéré comme une véritable passion nationale.",
+          "reponses": ["Football", "Basketball", "Tennis", "Golf"],
+          "bonne_reponse": "Football",
+          "sujet": "sport"
+        },
+        {
+          "question": "Qui a remporté le Super Bowl 2020 ?",
+          "explication": "Les Kansas City Chiefs ont remporté le Super Bowl 2020 en battant les San Francisco 49ers lors de la 54e édition du Super Bowl.",
+          "reponses": ["Kansas City Chiefs", "San Francisco 49ers", "New England Patriots", "Los Angeles Rams"],
+          "bonne_reponse": "Kansas City Chiefs",
+          "sujet": "sport"
+        },
+        ...
+      ]
+      
       `;
 
     return prompt;

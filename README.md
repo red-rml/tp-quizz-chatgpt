@@ -15,7 +15,7 @@
   * tp-quizz-chatgpt-server/src/quizz/quizz.module.ts
   * tp-quizz-chatgpt-server/src/websocket/socket.module.ts
   
-et à la place de **'APIKEY'** Mettre la clé API OpenAI
+et à la place de **'APIKEY'** Mettre la clé API OpenAI partagé par email
 
 ### Utilisation
 
